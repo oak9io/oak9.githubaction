@@ -5,11 +5,9 @@ inputs:
   organizationId:
     description: 'Organization ID'
     required: true
-    default: 'inspire11'
   projectId: # id of project
     description: 'Project ID'
     required: true
-    default: 'proj-inspire11-1'
   maximumSeverity:
     description: 'Maximum severity'
     required: true

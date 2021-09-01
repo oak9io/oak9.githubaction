@@ -35448,7 +35448,11 @@ module.exports = (fileName) =>
     const maxSeverity = severityMapping.getSeverityLevelForText(
       core.getInput('maximumSeverity')
     );
-    const logDesignGaps = core.getInput('logDesignGaps');
+    // fetch the configuration value for design gap logging
+    const logDesignGapsConfig = core.getInput('logDesignGaps').toLowerCase();
+
+    // GitHub Actions always returns values as a string, we want to convert to a boolean safely.
+    const shouldLogDesignGaps = (logDesignGapsConfig === 'true');
     /**
      * Post to /api/{orgid}/validations/{projectId}/queue/iac?files
      * Status?
@@ -35530,16 +35534,16 @@ module.exports = (fileName) =>
             );
           }
         } else {
-          console.log('Status results', checkRequestStatusResponse.data);
           retryTimes = 0;
           const {
             result: { designGaps },
             resultsUrl
           } = checkRequestStatusResponse.data;
-          if (logDesignGaps && designGaps.length)
+          if (shouldLogDesignGaps === true && designGaps.length) {
             core.info(
-              JSON.stringify(logDesignGapsInConsole(designGaps), null, 2)
+                JSON.stringify(logDesignGapsInConsole(designGaps), null, 2)
             );
+          }
           processDesignGaps(designGaps);
           core.info(formatDesignGapMessage());
           core.info(`For more details, browse to ${resultsUrl}`);
@@ -35605,10 +35609,13 @@ module.exports.processDesignGaps = processDesignGaps;
 function formatDesignGapMessage() {
   let designGapErrorMessage = '';
   gapCounter.getSeverityCounts().forEach((value, key) => {
-    let severityLevel = severityMapping.getSeverityTextForLevel(key);
-    designGapErrorMessage += ` ${capitalizeFirstLetter(
-      severityLevel
-    )} ${value};`;
+    if (key !== 0) {
+      let severityLevel = severityMapping.getSeverityTextForLevel(key);
+      designGapErrorMessage += ` ${capitalizeFirstLetter(
+          severityLevel
+      )} ${value};`;
+    }
+
   });
   return designGapErrorMessage
     ? `Design Gap(s) found:${designGapErrorMessage}`
@@ -35658,8 +35665,10 @@ module.exports = (sourceCodeDirectory, zipFileName) =>
       // check if directory is empty
       checkIfDirectoryIsEmpty(sourceCodeDirectory);
 
+      // instantiate an array to list files to be zipped
       let zipFileList = [];
-      // check and delete unnecessary files
+
+      // crawl the directory and add files to the list
       zipFileList  = await loopDirectory(sourceCodeDirectory);
 
       // zip directory
@@ -35886,11 +35895,11 @@ module.exports = {
 class Oak9SeverityMapping {
   constructor() {
     let map = new Map();
-    map.set(0, 'none');
-    map.set(1, 'low');
-    map.set(2, 'moderate');
-    map.set(3, 'high');
     map.set(4, 'critical');
+    map.set(3, 'high');
+    map.set(2, 'moderate');
+    map.set(1, 'low');
+    map.set(0, 'none');
     this.severitiesMap = map;
   }
 
