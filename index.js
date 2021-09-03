@@ -35672,7 +35672,7 @@ module.exports = (sourceCodeDirectory, zipFileName) =>
       zipFileList  = await loopDirectory(sourceCodeDirectory);
 
       // zip directory
-      await zipDirectory(zipFileList, zipFileName, archiverObj);
+      await zipFiles(zipFileList, zipFileName, sourceCodeDirectory, archiverObj);
 
       checkFileSize(`${zipFileName}.zip`);
       resolve();
@@ -35741,18 +35741,19 @@ function checkIfDirectoryIsEmpty(newDirectoryName) {
 module.exports.checkIfDirectoryIsEmpty = checkIfDirectoryIsEmpty;
 
 /**
- * @param {Array} directoryName
+ * @param {Array} zipFileList
  * @param {String} zipFileName
+ * @param {String} dirBasePath
  * @param {archiver} archive
  * @returns {Promise}
  */
-function zipDirectory(zipFileList, zipFileName, archive) {
+function zipFiles(zipFileList, zipFileName, dirBasePath, archive) {
   core.info(`\u001b[1;34mZipping Files`);
   const stream = fs.createWriteStream(`./${zipFileName}.zip`);
 
   return new Promise((resolve, reject) => {
     zipFileList.forEach(file => {
-      archive.file(file);
+      archive.file(file, { name: file.replace(dirBasePath, '') });
     });
     archive.on('error', (err) =>
       reject('Failed to zip file', err.message)
@@ -35764,7 +35765,7 @@ function zipDirectory(zipFileList, zipFileName, archive) {
   });
 }
 
-module.exports.zipDirectory = zipDirectory;
+module.exports.zipFiles = zipFiles;
 
 /**
  * @param {String} locationPath
