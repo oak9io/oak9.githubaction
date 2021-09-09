@@ -4,6 +4,16 @@ Use the oak9 GitHub action to scan for infrastructure-as-code errors in your oak
 GitHub action in your project workflow, you can automatically start to find, fix and monitor your project for 
 configuration errors in Terraform.
 
+## Highlighted Features
+
+Using this Action provides the following features:
+* App Security Design
+* Infrastructure-as-Code Security Checks
+* Automated Security Design Integration
+* Security Design Enforcement
+* Security Design Change Management
+* Out of the box compliance regulations including: PCI DSS, ISO 27001, GDPR, CCPA HIPAA, HI TECH, State Regulations, NIS SP 800- 53
+
 ## Requirements
 
 To run an analysis on your code, you first need to set up your project on [oak9](https://www.oak9.io/)
