@@ -51456,6 +51456,11 @@ class CheckRunTextFormatter {
      * @returns {string}
      */
     formatOutputAsMarkdown() {
+
+        if (this.limit > 0) {
+            this.formattedOutput += `Showing top ${this.limit} most severe design gaps\n\n`;
+        }
+
         this.formattedOutput += this.getHeader();
         let counter = 0;
         this.resultsCounter.forEach((designGapCounter, resourceName) => {
@@ -51465,7 +51470,7 @@ class CheckRunTextFormatter {
             }
         });
         this.formattedOutput += '\n\n';
-        this.formattedOutput += `For more details, browse to ${this.resultsUrl}`
+        this.formattedOutput += `[Open oak9](${this.resultsUrl}) to see more details & download the report.`
         return this.formattedOutput;
     }
 }
@@ -51865,7 +51870,7 @@ module.exports = (message, conclusion) =>
                     repo,
                     data: {
                         head_sha: process.env.GITHUB_SHA,
-                        name: 'oak9 Validation Scan',
+                        name: 'oak9 Analysis Report',
                         status: 'completed',
                         conclusion: conclusion,
                         output: {
