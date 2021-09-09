@@ -1,5 +1,5 @@
-name: 'OAK9 Github Action'
-description: 'OAK9 Github Action'
+name: 'oak9 Github Action'
+description: 'oak9 Github Action'
 environment: production
 inputs:
   organizationId:
