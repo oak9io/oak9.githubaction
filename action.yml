@@ -19,5 +19,5 @@ runs:
   using: 'node12'
   main: 'index.js'
 branding:
-  icon: 'activity'
-  color: 'orange'
+  icon: 'shield'
+  color: 'gray-dark'
