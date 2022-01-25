@@ -23,22 +23,27 @@ To run an analysis on your code, you first need to set up your project on [oak9]
 The following is an example GitHub Actions workflow:
 
 ```yaml
+name: Example workflow using oak9 
 on: push
-name: Main Workflow
 jobs:
-  oak9Analysis:
-    - uses: actions/checkout@v1
-    - name: OAK9 Github Action
-      uses: oak9io/oak9.githubaction
-      env:
-        GITHUB_REPOSITORY: $GITHUB_REPOSITORY
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        OAK9_API_TOKEN: ${{ secrets.OAK9_API_TOKEN }}
-      with:
-        organizationId: '[your-oak9-organization-id]'
-        projectId: '[your-oak9-project-id]'
-        maximumSeverity: 'high'
-        logDesignGaps: true
+  oak9-analysis:
+    runs-on: ubuntu-latest
+    name: oak9-action
+    steps:
+     - name: Checkout repo
+       uses: actions/checkout@v2
+     - name: oak9 Github Action
+       id: oak9
+       uses: oak9io/oak9.githubaction@master
+       env:
+         OAK9_API_TOKEN: ${{ secrets.OAK9_API_TOKEN }}
+         GITHUB_REPOSITORY: $GITHUB_REPOSITORY
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         organizationId: '[your-oak9-organization-id]'
+         projectId: '[your-oak9-project-id]'
+         maximumSeverity: 'high'
+         logDesignGaps: true
 ```
 
 ## Parameters
