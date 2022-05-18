@@ -44,7 +44,7 @@ jobs:
         projectId: '[your-oak9-project-id]'
         maximumSeverity: 'High'
         logDesignGaps: true
-      ```
+```
 
 ## Parameters
 
